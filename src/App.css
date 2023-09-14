@@ -1,0 +1,33 @@
+#root {
+  /* max-width: 1280px; */
+  width: 600px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+input{
+    padding: 0.6em 1.2em;
+    border: none;
+}
+.info-item{
+  display: flex;
+}
+.list-item{
+  list-style: none;
+  text-align: start;
+  padding: 10px;
+}
+.list-item li{
+  margin-top: 10px;
+}
+.top-header{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+}
+span, li{
+  font-weight: bold;
+}
