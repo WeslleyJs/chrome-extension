@@ -55,33 +55,41 @@ function App() {
 
 useEffect(() => {
   const getItem = async (mlb) => {
-    await axios.get(`https://api.mercadolibre.com/items/${mlb}`).then(element => {
-      setItem(element.data)
-      
-    }).catch(err => console.log(err.message));
+    try {
+      const element = await axios.get(`https://api.mercadolibre.com/items/${mlb}`)
+      const { data } = element
+      setItem(data)
+    } catch (error) {
+      console.log(error.message)
+    }
 }
   const getShipping = async (mlb) =>{
-  await axios.get(`https://api.mercadolibre.com/items/shipping_options/free?ids=${mlb}`).then(element => {
-    const { data } = element;
-    Object.keys(data).map(function (key) {
-      const result = data[key].coverage.all_country;
-      setShipping(result);
-    })
-  }).catch(err => console.log(err.message));
-}
+    try {
+      const element = await axios.get(`https://api.mercadolibre.com/items/shipping_options/free?ids=${mlb}`)
+      const { data } = element;
+      Object.keys(data).map(function (key) {
+        const result = data[key].coverage.all_country;
+        setShipping(result);
+      })
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
     const getVisits = async (mlb) => {
-      await axios.get(`https://api.mercadolibre.com/items/${mlb}/visits/time_window?last=7&unit=day`).then(element => {
+      try {
+        const element = await axios.get(`https://api.mercadolibre.com/items/${mlb}/visits/time_window?last=7&unit=day`)
         const { data } = element;
         setVisits(data.results);
         
-       }).catch(error => {
-          if (error.response && error.response.status === 429) {
-              const retryAfter = error.response.headers['Retry-After'];
-               new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-               return getVisits(mlb);
+      } catch (error) {
+        if (error.response && error.response.status === 429) {
+          const retryAfter = error.response.headers['Retry-After'];
+           await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+           return getVisits(mlb);
+          }
+        throw error;
       }
-      throw error;
-       })} 
+    } 
     getVisits(search);
     getItem(search);
     getShipping(search);  
